@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>  Planetary System </title>
+		<meta charset="utf-8">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #000;
+				color: blue;
+				margin: 0px;
+				overflow: hidden;
+			}
+			#info {
+				color: white;
+				position: absolute;
+				top: 10px;
+				width: 100%;
+				text-align: center;
+				z-index: 100;
+				display:block;
+			}
+            #bttX{
+                position: absolute;
+                top: 20px;
+                left: 100px;
+            }
+            
+            span{
+                text-decoration-color: floralwhite;
+                position: absolute;
+                top: 5px;
+                left: 100px;
+            }
+            
+            #tierra{
+                position: absolute;
+                top: 10px;
+                left: 10px;
+            }
+            
+            #animacion{
+                position: absolute;
+                top : 10px;
+                left: 30px;
+            }
+            
+            #animacionEnd{
+                position: absolute;
+                top: 10px;
+                left: 200px;
+            }
+            
+            #astronauta span{
+                position: absolute;
+                top: 50px;
+                left: 40px;
+                
+            }
+            
+            #arriba{
+                position: absolute;
+                top: 70px;
+                left: 150px;
+            }
+            
+            #derecha{
+                position: absolute;
+                top: 100px;
+                left: 220px;
+            }
+            
+            #izquierda{
+                position: absolute;
+                top: 100px;
+                left: 60px;
+            }
+            
+            #abajo{
+                position: absolute;
+                top: 135px;
+                left: 150px;
+            }
+            
+            #adelante{
+                position: absolute;
+                top: 80px;
+                left: 330px;
+            }
+            
+            #atras{
+                position: absolute;
+                top: 120px;
+                left: 340px;
+            }
+            
+            #astro{
+                position: absolute;
+                top: 10px;
+                left: 500px;
+            }
+            
+            #Vtierra{
+                position: absolute;
+                top: 10px;
+                left: 630px;
+            }
+            
+            #Vsaturno{
+                position: absolute;
+                top: 10px;
+                left: 730px;
+            }
+            
+            #nota{
+                position: absolute;
+                top: 40px;
+                left: 500px;
+            }
+            
+            #Vjupiter{
+                position: absolute;
+                top: 10px;
+                left: 850px;
+            }
+            
+            #Vurano{
+                position: absolute;
+                top: 10px;
+                left: 960px;
+            }
+            
+            #Vmercurio{
+                position: absolute;
+                top: 10px;
+                left: 1060px;
+            }
+            
+            #Vmarte{
+                position: absolute;
+                top: 10px;
+                left: 1180px;
+            }
+            
+            #Vvenus{
+                position: absolute;
+                top: 10px;
+                left: 1280px;
+            }
+            
+            #nota2{
+                position: absolute;
+                top: 90px;
+                left: 500px;
+            }
+            
+			#info a, .button { color: #f00; font-weight: bold; text-decoration: underline; cursor: pointer }
+		</style>
+	</head>
+
+	<body>
+        
+        <div id="planetas">
+            <!--button id="tierra"> Planeta Tierra </button-->
+            <button id="animacion"> Comenzar Animacion </button>
+            <button id="animacionEnd"> Finalizar Animacion </button>
+        </div>
+        
+        <div id="astronauta">
+            <span> ASTRONAUTA :  </span>
+            <button id="derecha"> Derecha </button>
+            <button id="izquierda"> Izquierda </button>
+            <button id="arriba"> Arriba </button>
+            <button id="abajo"> Abajo </button>
+            <button id="adelante"> Adelante </button>
+            <button id="atras"> Atras </button>
+        </div>
+        
+        <div id="acercamiento">
+            <span id="nota"> Nota 1 : Estas opciones solo funcionaran si es que no se ha activado antes la animacion, si ya se ha activado la animacion , porfavor recargue este proyecto .</span>
+            <span id="nota2"> Nota 2 :Puede mover la camara con las flechas del teclado y visitar nuestro simulacion de un sistema solar </span>
+            <button id="astro"> Ver Astronauta </button>
+            <button id="Vtierra"> Ver Tierra </button>
+            <button id="Vsaturno"> Ver Saturno </button>
+            <button id="Vjupiter"> Ver Jupiter </button>
+            <button id="Vurano"> Ver Urano </button>
+            <button id="Vmercurio"> Ver Mercurio </button>
+            <button id="Vmarte"> Ver Marte </button>
+            <button id="Vvenus"> Ver Venus </button>
+            
+        </div>
+        
+        <!--button id="bttX"> hola </button-->
+        <audio src="../Proyecto/Librerias/cancion.mp3" autoplay loop></audio>
+        
+		<script src="../Proyecto/Librerias/three.min.js"></script>
+		<script src="../Proyecto/Librerias/OBJLoader.js"></script>
+        <script src="../Proyecto/Librerias/FirstPersonControls.js"></script>
+
+		<script>
+            
+            alert(" POR FAVOR USAR -- FIREFOX--- PARA ESTE PROYECTO , EN EL CASO DE QUE NO SE VISUALIZE");
+            
+            var band = false;
+            
+            
+            var right = false;
+            var leftA = false;
+            var upA = false;
+            var downA = false;
+            var frontA = false;
+            var backA = false;
+            
+            var astron = false;
+            var sTierra = false;
+            var sSaturno = false;
+            var sJupiter = false;
+            var sUrano = false;
+            var sMercurio = false;
+            var sMarte = false;
+            var sVenus = false;
+            
+			var container , controls;
+
+			var camera, scene, renderer;
+
+            var clock = new THREE.Clock();
+			var windowHalfX = window.innerWidth / 2;
+			var windowHalfY = window.innerHeight / 2;
+            var groupSol;
+            var groupMercurio;
+            var groupMarte;
+            var groupVenus;
+            var groupTierra;
+            var groupNeptuno;
+            var groupSaturno;
+            var groupJupiter;
+            var groupAstronauta;
+            
+            
+            var Astrox;
+            var Astroy;
+            var Astroz;
+            
+            var Tierrax;
+            var Tierray;
+            var Tierraz;
+            
+			init();
+			animate();
+
+
+			function init() {
+                
+                groupSol = new THREE.Group();
+                groupMercurio = new THREE.Group();
+                groupMarte = new THREE.Group();
+                groupVenus = new THREE.Group();
+                groupTierra = new THREE.Group();
+                groupNeptuno = new THREE.Group();
+                groupUrano = new THREE.Group();
+                groupSaturno = new THREE.Group();
+                groupJupiter = new THREE.Group();
+                groupAstronauta = new THREE.Group();
+                
+                
+                
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 1, 1000 );
+				camera.position.z = 530;
+                camera.position.y = 3;
+                camera.position.x = 0;
+
+				// scene
+
+				scene = new THREE.Scene();
+                
+                scene.add(groupSol);
+                scene.add(groupMercurio);
+                scene.add(groupMarte);
+                scene.add(groupVenus);
+                scene.add(groupTierra);
+                scene.add(groupNeptuno);
+                scene.add(groupUrano);
+                scene.add(groupSaturno);
+                scene.add(groupJupiter);
+                scene.add(groupAstronauta);
+                
+				var ambient = new THREE.AmbientLight( 0x666672 );//0x101030
+				scene.add( ambient );
+                
+                var originVector = new THREE.Vector3(0,0,0);
+                
+				var directionalLight = new THREE.DirectionalLight(  0xffffff ,2.2);
+				directionalLight.position.x = 0.05;
+                directionalLight.position.y = 0;
+                directionalLight.position.z = 0;
+                directionalLight.lookAt(originVector);
+				scene.add( directionalLight );
+                
+                var originVectorr = new THREE.Vector3(0,0,0);
+                
+				var directionalLightt = new THREE.DirectionalLight(  0xffffff ,2.2);
+				directionalLightt.position.x = -0.05;
+                directionalLightt.position.y = 0;
+                directionalLightt.position.z = 0;
+                directionalLightt.lookAt(originVector);
+				scene.add( directionalLightt );
+                
+                
+                var originVectorrr = new THREE.Vector3(0,0,0);
+                
+				var directionalLighttt = new THREE.DirectionalLight(  0xffffff ,2.2);
+				directionalLighttt.position.x = 0;
+                directionalLighttt.position.y = 0;
+                directionalLighttt.position.z = 5;
+                directionalLighttt.lookAt(originVector);
+				scene.add( directionalLighttt );
+                
+                var originVectorrr = new THREE.Vector3(0,0,0);
+                
+                var directionalLightttt = new THREE.DirectionalLight(  0xffffff ,2.2);
+				directionalLightttt.position.x = 0;
+                directionalLightttt.position.y = 1;
+                directionalLightttt.position.z = -30;
+                directionalLightttt.lookAt(originVector);
+				scene.add( directionalLightttt );
+                
+                //...............................
+                
+                //controles........................................................................................
+                
+                controls = new THREE.FirstPersonControls( camera );
+
+				controls.movementSpeed = 70;
+				controls.lookSpeed = 0.05;
+				controls.noFly = true;
+				controls.lookVertical = false;
+              
+                
+                //....................................................................................................
+                
+				// textura General.....................................................................................
+
+				var manager = new THREE.LoadingManager();
+				manager.onProgress = function ( item, loaded, total ) {
+
+					console.log( item, loaded, total );
+
+				};
+                
+                //SOL...............................................................................................
+               
+                
+                var textureSOl = new THREE.Texture();
+
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						console.log( Math.round(percentComplete, 2) + '% downloaded' );
+					}
+				};
+
+                onError = function ( xhr ) {
+				};
+                
+                var loaderSOL = new THREE.ImageLoader( manager );
+				loaderSOL.load( 'objetos/sol.jpg', function ( image ) {
+
+					textureSOl.image = image;
+					textureSOl.needsUpdate = true;
+
+				} );
+                
+                
+                var loader = new THREE.OBJLoader( manager );
+                loader.load( 'objetos/sol.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureSOl;
+
+						}
+
+					} );
+
+					object.position.y = 0;
+                    object.position.x = 30;
+					scene.add( object );
+                    
+                    groupSol.add( object );
+
+				}, onProgress, onError );
+                
+                //...........................................................
+                
+                //MERCURIO.........................................................................
+                
+                // textura
+
+				var textureMercurio = new THREE.Texture();
+
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						console.log( Math.round(percentComplete, 2) + '% downloaded' );
+					}
+				};
+
+				var onError = function ( xhr ) {
+				};
+
+
+				var loader = new THREE.ImageLoader( manager );
+				loader.load( 'objetos/mercurio.jpg', function ( image ) {
+
+					textureMercurio.image = image;
+					textureMercurio.needsUpdate = true;
+
+				} );
+                
+				// modelo
+
+				var loader = new THREE.OBJLoader( manager );
+                loader.load( 'objetos/mercurio.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureMercurio;
+
+						}
+
+					} );
+
+					object.position.y = 50;
+                    object.position.x = -100;
+					scene.add( object );
+                    
+                    groupMercurio.add(object);
+
+				}, onProgress, onError );
+                
+            
+                //...................................................................................................
+                
+                //MARTE............................................................................................
+                
+                
+                // textura
+
+				var textureMarte = new THREE.Texture();
+
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						console.log( Math.round(percentComplete, 2) + '% downloaded' );
+					}
+				};
+
+				var onError = function ( xhr ) {
+				};
+
+
+				var loader = new THREE.ImageLoader( manager );
+				loader.load( 'objetos/marte.jpg', function ( image ) {
+
+					textureMarte.image = image;
+					textureMarte.needsUpdate = true;
+
+				} );
+                
+				// modelo
+
+				var loader = new THREE.OBJLoader( manager );
+                loader.load( 'objetos/marte.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureMarte;
+
+						}
+
+					} );
+
+					object.position.y = 60;
+                    object.position.x = 130;
+                    object.position.z = 20;
+					scene.add( object );
+                    
+                    groupMarte.add(object);
+
+				}, onProgress, onError );
+                
+                
+                //VENUS.............................................................................................
+                
+                 // textura
+
+				var textureVenus = new THREE.Texture();
+
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						console.log( Math.round(percentComplete, 2) + '% downloaded' );
+					}
+				};
+
+				var onError = function ( xhr ) {
+				};
+
+
+				var loader = new THREE.ImageLoader( manager );
+				loader.load( 'objetos/venus.jpg', function ( image ) {
+
+					textureVenus.image = image;
+					textureVenus.needsUpdate = true;
+
+				} );
+                
+				// modelo
+
+				var loader = new THREE.OBJLoader( manager );
+                loader.load( 'objetos/venus.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureVenus;
+
+						}
+
+					} );
+
+					object.position.y = -50;
+                    object.position.x = 150;
+                    object.position.z = 30;
+					scene.add( object );
+                    
+                    groupVenus.add(object);
+
+				}, onProgress, onError );
+                
+                
+                //...................................................................................................
+                
+                //TIERRA................................................................................................
+                
+                var textureTierra = new THREE.Texture();
+
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						console.log( Math.round(percentComplete, 2) + '% downloaded' );
+					}
+				};
+
+				var onError = function ( xhr ) {
+				};
+
+
+				var loader = new THREE.ImageLoader( manager );
+				loader.load( 'objetos/tierra.jpg', function ( image ) {
+
+					textureTierra.image = image;
+					textureTierra.needsUpdate = true;
+
+				} );
+                
+				// modelo
+
+				var loader = new THREE.OBJLoader( manager );
+                loader.load( 'objetos/tierra.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureTierra;
+
+						}
+
+					} );
+
+					object.position.y = 0;
+                    object.position.x = 190;
+                    object.position.z = 0;
+                    
+                    Astrox = object.position.x;
+                    Astroy = object.position.y;
+                    Astroz = object.position.z;
+                    
+					scene.add( object );
+                    
+                    groupTierra.add(object);
+
+				}, onProgress, onError );
+                
+                
+                //...................................................................................................
+                
+                //NEPTUNO.............................................................................................
+                
+                var textureNeptuno = new THREE.Texture();
+
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						console.log( Math.round(percentComplete, 2) + '% downloaded' );
+					}
+				};
+
+				var onError = function ( xhr ) {
+				};
+
+
+				var loader = new THREE.ImageLoader( manager );
+				loader.load( 'objetos/neptuno.jpg', function ( image ) {
+
+					textureNeptuno.image = image;
+					textureNeptuno.needsUpdate = true;
+
+				} );
+                
+				// modelo
+
+				var loader = new THREE.OBJLoader( manager );
+                loader.load( 'objetos/neptuno.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureNeptuno;
+
+						}
+
+					} );
+
+					object.position.y = 50;
+                    object.position.x = 200;
+                    object.position.z = 0;
+					scene.add( object );
+                    
+                    groupNeptuno.add(object);
+
+				}, onProgress, onError );
+                
+                //.................................................................................................
+                
+                //URANO..............................................................................................
+                    
+                var textureUrano = new THREE.Texture();
+
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						console.log( Math.round(percentComplete, 2) + '% downloaded' );
+					}
+				};
+
+				var onError = function ( xhr ) {
+				};
+
+
+				var loader = new THREE.ImageLoader( manager );
+				loader.load( 'objetos/urano.jpg', function ( image ) {
+
+					textureUrano.image = image;
+					textureUrano.needsUpdate = true;
+
+				} );
+                
+				// modelo
+
+				var loader = new THREE.OBJLoader( manager );
+                loader.load( 'objetos/urano.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureUrano;
+
+						}
+
+					} );
+
+					object.position.y = 10;
+                    object.position.x = 230;
+                    object.position.z = 0;
+					scene.add( object );
+                    
+                    groupUrano.add(object);
+
+				}, onProgress, onError );
+                
+                //ANILLO SATURNO...................................................................................
+                    
+                var textureAnillo= new THREE.Texture();
+
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						console.log( Math.round(percentComplete, 2) + '% downloaded' );
+					}
+				};
+
+				var onError = function ( xhr ) {
+				};
+
+
+				var loader = new THREE.ImageLoader( manager );
+				loader.load( 'objetos/anillo.jpg', function ( image ) {
+
+					textureAnillo.image = image;
+					textureAnillo.needsUpdate = true;
+
+				} );
+                
+				// modelo
+
+				var loader = new THREE.OBJLoader( manager );
+                loader.load( 'objetos/ani.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureAnillo;
+
+						}
+
+					} );
+
+					object.position.y = -40;
+                    object.position.x = 50;
+                    object.position.z = 300;
+					scene.add( object );
+                    
+                    groupSaturno.add(object);
+
+				}, onProgress, onError );
+                
+                //SATURNO........................................................................................
+                
+                var textureSaturno = new THREE.Texture();
+
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						console.log( Math.round(percentComplete, 2) + '% downloaded' );
+					}
+				};
+
+				var onError = function ( xhr ) {
+				};
+
+
+				var loader = new THREE.ImageLoader( manager );
+				loader.load( 'objetos/saturno.jpg', function ( image ) {
+
+					textureSaturno.image = image;
+					textureSaturno.needsUpdate = true;
+
+				} );
+                
+				// modelo
+
+				var loader = new THREE.OBJLoader( manager );
+                loader.load( 'objetos/saturno.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureSaturno;
+
+						}
+
+					} );
+
+					object.position.y = -38.7;
+                    object.position.x = 52;
+                    object.position.z = 300;
+					scene.add( object );
+                    
+                    groupSaturno.add(object);
+
+				}, onProgress, onError );
+                
+                //JUPITER..........................................................................................
+                
+                var textureJupiter = new THREE.Texture();
+
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						console.log( Math.round(percentComplete, 2) + '% downloaded' );
+					}
+				};
+
+				var onError = function ( xhr ) {
+				};
+
+
+				var loader = new THREE.ImageLoader( manager );
+				loader.load( 'objetos/jupiter.jpg', function ( image ) {
+
+					textureJupiter.image = image;
+					textureJupiter.needsUpdate = true;
+
+				} );
+                
+				// modelo
+
+				var loader = new THREE.OBJLoader( manager );
+                loader.load( 'objetos/jupiter.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureJupiter;
+
+						}
+
+					} );
+
+					object.position.y = 1;
+                    object.position.x = 50;
+                    object.position.z = 400;
+					scene.add( object );
+                    
+                    groupJupiter.add(object);
+
+				}, onProgress, onError );
+                
+                //...................................................................................................
+            
+            //ATRONAUTA...............................................................................................
+            
+            var textureAstronauta = new THREE.Texture();
+
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						console.log( Math.round(percentComplete, 2) + '% downloaded' );
+					}
+				};
+
+				var onError = function ( xhr ) {
+				};
+
+
+				var loader = new THREE.ImageLoader( manager );
+				loader.load( 'objetos/per.jpg', function ( image ) {
+
+					textureAstronauta.image = image;
+					textureAstronauta.needsUpdate = true;
+
+				} );
+                
+				// modelo
+
+				var loader = new THREE.OBJLoader( manager );
+                loader.load( 'objetos/per.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureAstronauta;
+
+						}
+
+					} );
+
+					object.position.y = 0;
+                    object.position.x = -3;
+                    object.position.z = 510;
+					scene.add( object );
+                    
+                    Astrox = object.position.x;
+                    
+                    
+                    groupAstronauta.add(object);
+                    
+                    
+                    
+                
+
+				}, onProgress, onError );
+                
+                //ESTRELLAS.......................................................................................
+                
+                var textureEstrella = new THREE.Texture();
+
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						console.log( Math.round(percentComplete, 2) + '% downloaded' );
+					}
+				};
+
+				var onError = function ( xhr ) {
+				};
+
+
+				var loader = new THREE.ImageLoader( manager );
+				loader.load( 'objetos/amarillo.jpg', function ( image ) {
+
+					textureEstrella.image = image;
+					textureEstrella.needsUpdate = true;
+
+				} );
+                
+				// modelo
+
+				var a = new THREE.OBJLoader( manager );
+                a.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = 60;
+                    object.position.x = 0;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var loader = new THREE.OBJLoader( manager );
+                loader.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = 70;
+                    object.position.x = -50;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = 40;
+                    object.position.x = 50;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = 40;
+                    object.position.x = 100;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = 100;
+                    object.position.x = 200;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = 40;
+                    object.position.x = -150;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = 100;
+                    object.position.x = 200;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = 40;
+                    object.position.x = 50;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = 70;
+                    object.position.x = 150;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = -60;
+                    object.position.x = 45;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = -140;
+                    object.position.x = 150;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = -140;
+                    object.position.x = 250;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = -100;
+                    object.position.x = -40;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = 10;
+                    object.position.x = -150;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = 65;
+                    object.position.x = 250;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = -100;
+                    object.position.x = 290;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = 0;
+                    object.position.x = -300;
+                    object.position.z = -40;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = 0;
+                    object.position.x = 150;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = 0;
+                    object.position.x = -250;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = 40;
+                    object.position.x = -255;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = 0;
+                    object.position.x = 150;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = -67;
+                    object.position.x = -167;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = -73;
+                    object.position.x = -245;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = 45;
+                    object.position.x = 80;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = -100;
+                    object.position.x = 120;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                var b = new THREE.OBJLoader( manager );
+                b.load( 'objetos/estr.obj', function ( object ) {
+
+					object.traverse( function ( child ) {
+
+						if ( child instanceof THREE.Mesh ) {
+
+							child.material.map = textureEstrella;
+
+						}
+
+					} );
+
+					object.position.y = -84;
+                    object.position.x = 177;
+                    object.position.z = -50;
+					scene.add( object );
+
+
+				}, onProgress, onError );
+                
+                
+                
+                //...................................................................................................
+
+				renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				container.appendChild( renderer.domElement );
+                
+                document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+				window.addEventListener( 'resize', onWindowResize, false );
+                eventos();
+                
+
+			}
+            
+            
+            
+            //...........0...........................................................................................
+
+			function onWindowResize() {
+
+				windowHalfX = window.innerWidth / 2;
+				windowHalfY = window.innerHeight / 2;
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+            
+            function eventos(){
+                document.getElementById("animacion").onclick = start;
+                document.getElementById("animacionEnd").onclick = finish;
+                document.getElementById("derecha").onclick = derecha;
+                document.getElementById("izquierda").onclick = izquierda;
+                document.getElementById("arriba").onclick = arriba;
+                document.getElementById("abajo").onclick = abajo;
+                document.getElementById("adelante").onclick = adelante;
+                document.getElementById("atras").onclick = atras;
+                document.getElementById("astro").onclick = verAstronauta;
+                document.getElementById("Vtierra").onclick = verTierra;
+                document.getElementById("Vsaturno").onclick = verSaturno;
+                document.getElementById("Vjupiter").onclick = verJupiter;
+                document.getElementById("Vurano").onclick = verUrano;
+                document.getElementById("Vmercurio").onclick = verMercurio;
+                document.getElementById("Vmarte").onclick = verMarte;
+                document.getElementById("Vvenus").onclick = verVenus;
+            }
+            
+            function start(){
+                band = true;
+            }
+            
+            function finish(){
+                band = false;
+            }
+            
+            function derecha(){
+                right = true;
+            }
+            
+            function izquierda(){
+                leftA = true;
+            }
+            
+            function arriba(){
+                upA = true;
+            }
+            
+            function abajo(){
+                downA = true;
+            }
+            
+            function adelante(){
+                frontA = true;
+            }
+            
+            function atras(){
+                backA = true;
+            }
+            
+            function verAstronauta(){
+                astron = true;
+            }
+            
+            function verTierra(){
+                sTierra = true;
+            }
+            
+            function verSaturno(){
+                sSaturno = true;
+            }
+            
+            function verJupiter(){
+                sJupiter = true;
+            }
+            
+            function verUrano(){
+                sUrano = true;
+            }
+            
+            function verMercurio(){
+                sMercurio = true;
+            }
+            
+            function verMarte(){
+                sMarte = true;
+            }
+            
+            function verVenus(){
+                sVenus = true;
+            }
+            
+			function animate() {
+
+				requestAnimationFrame( animate );
+				render();
+
+			}
+            
+            function onDocumentMouseMove( event ) {
+
+				mouseX = ( event.clientX - windowHalfX ) / 2;
+				mouseY = ( event.clientY - windowHalfY ) / 2;
+
+			}
+        
+
+			function render() {
+                
+				//camera.position.y += ( -mouseY - camera.position.y ) * .04;
+                //camera.position.x += (  -mouseY - camera.position.x ) * .04;
+                
+                var delta = clock.getDelta(),
+					time = clock.getElapsedTime() * 5;
+                controls.update( delta );
+                
+                if(band == true){
+                    
+                groupMercurio.rotation.z -= 0.003;
+                groupMarte.rotation.z -= 0.002;
+                groupVenus.rotation.z += 0.003;
+                groupTierra.rotation.y -= 0.005;
+                groupNeptuno.rotation.y += 0.003;
+                groupUrano.rotation.y -= 0.003;
+                groupSaturno.rotation.y -= 0.003;
+                groupJupiter.rotation.y -= 0.003;
+                groupAstronauta.rotation.z -= 0.001;
+                    
+                }
+                
+                if(right == true){
+                    groupAstronauta.position.x +=1;
+                    //alert(groupAstronauta.position.x);
+                }
+                right = false;
+                
+                if(leftA == true){
+                    groupAstronauta.position.x -=1; 
+                }
+                leftA = false;
+                
+                if(upA == true){
+                    groupAstronauta.position.y +=1; 
+                }
+                upA = false;
+                
+                if(downA == true){
+                    groupAstronauta.position.y -=1; 
+                }
+                downA = false;
+                
+                if(frontA == true){
+                    groupAstronauta.position.z -=2; 
+                }
+                frontA = false;
+                
+                if(backA == true){
+                    groupAstronauta.position.z +=2; 
+                }
+                backA = false;
+                
+                if(astron == true){ 
+                    camera.position.x = groupAstronauta.position.x - 3;
+                    camera.position.y = groupAstronauta.position.y + 3;
+                    camera.position.z = groupAstronauta.position.z + 530;
+                }
+                astron = false;
+                
+                if(sTierra ==  true){
+                    
+                    camera.position.x = groupTierra.position.x + 192;
+                    camera.position.y = groupTierra.position.y + 1;
+                    camera.position.z = groupTierra.position.z + 20;
+                }
+                sTierra = false;
+                
+                if(sSaturno == true){
+                    camera.position.x = groupTierra.position.x + 59;
+                    camera.position.y = groupTierra.position.y + -30.7;
+                    camera.position.z = groupTierra.position.z + 350;
+                }
+                sSaturno = false;
+                
+                if(sJupiter == true){
+                    camera.position.x = 56;
+                    camera.position.y = 3;
+                    camera.position.z = 430;
+                    
+                    sJupiter = false;
+                }
+                
+                if(sMercurio == true){
+                    camera.position.x = -100;
+                    camera.position.y = 51;
+                    camera.position.z = 12;
+                        
+                    sMercurio = false;
+                }
+                
+                if(sUrano == true){
+                    camera.position.x = 232;
+                    camera.position.y = 12;
+                    camera.position.z = 12;
+                        
+                    sUrano = false;
+                }
+                
+                if(sMarte == true){
+                    camera.position.x = 131;
+                    camera.position.y = 61;
+                    camera.position.z = 30;
+                        
+                    sMarte = false;
+                }
+                
+                if(sVenus == true){
+                    camera.position.x = 151;
+                    camera.position.y = -49;
+                    camera.position.z = 40;
+                        
+                    sVenus = false;
+                }
+                
+				camera.lookAt( scene );
+				renderer.render( scene, camera);
+
+			}
+
+		</script>
+
+	</body>
+</html>
+
